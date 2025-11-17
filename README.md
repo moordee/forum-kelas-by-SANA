@@ -5,9 +5,8 @@ https://docs.google.com/document/d/1CclGiRNiipXsCi1wVDne_Xj0bSatvzaxjgR76gKyEP8/
 # How to upload your work to your corresponding branches
 https://herjunaridwan.medium.com/cara-upload-project-ke-github-menggunakan-git-44287c5472ef
 
-# !important
-YOUR branch:
-Natalie: natalie
-Adhisti: adhisti
-Angel: Master
-me: proto
+# !important - YOUR branch:
+Natalie: natalie,
+Adhisti: adhisti,
+Angel: master,
+me: proto.
