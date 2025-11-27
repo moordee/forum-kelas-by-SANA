@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Jadwal;
 use App\Models\Absensi;
+use Carbon\Carbon;
 
 class BerandaController extends Controller
 {
@@ -21,13 +22,29 @@ class BerandaController extends Controller
         $totalSakit = Absensi::where('isHadir', 'S')->count();
         $totalIzin = Absensi::where('isHadir', 'I')->count();
         $totalDispen = Absensi::where('isHadir', 'D')->count();
-        return view('beranda', ['jadwal' => $jadwal,
-        'absensi' => $absensi,
-        'totalHadir' => $totalHadir,
-        'totalAlfa' => $totalAlfa,
-        'totalSakit' => $totalSakit,
-        'totalIzin' => $totalIzin,
-        'totalDispen' => $totalDispen]);
+
+        // Set Carbon to Indonesian
+        Carbon::setLocale('id');
+
+        // Get today's day in Indonesian (capitalized)
+        $today = ucfirst(Carbon::now()->isoFormat('dddd'));
+
+        // Retrieve schedule based on 'hari' field
+        $schedule = Jadwal::where('hari', $today)
+            ->orderBy('jam_mulai', 'asc')
+            ->get();
+
+
+        return view('beranda', [
+            'absensi' => $absensi,
+            'totalHadir' => $totalHadir,
+            'totalAlfa' => $totalAlfa,
+            'totalSakit' => $totalSakit,
+            'totalIzin' => $totalIzin,
+            'totalDispen' => $totalDispen,
+            'schedule' => $schedule,
+            'today' => $today
+        ]);
     }
 
     /**

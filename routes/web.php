@@ -5,28 +5,14 @@ use App\Http\Controllers\BerandaController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\AbsensiController;
-use App\Models\Absensi;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\JadwalController;
 
-Route::get('/presensi', function () {
-    if (!session('siswa_logged_in')) {
-        return redirect()->route('login');
-    }
-    return app(AbsensiController::class)->index();
-});
-
-Route::get('kas', function () {
-    if (!session('siswa_logged_in')) {
-        return redirect()->route('login');
-    }
-    return app(KasController::class)->show_kas();
-});
-
-Route::get('laporan', function () {
-    if (!session('siswa_logged_in')) {
-        return redirect()->route('login');
-    }
-    return app(KasController::class)->show_laporan();
-});
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
 // Show login page
 Route::get('/in', function () {
@@ -34,24 +20,27 @@ Route::get('/in', function () {
 })->name('login');
 
 // Process login
-Route::post('/login', [App\Http\Controllers\LoginController::class, 'login'])->name('login.process');
+Route::post('/login', [LoginController::class, 'login'])->name('login.process');
 
-// Dashboard
-Route::get('/beranda', function () {
-    // protect the page
-    if (!session('siswa_logged_in')) {
-        return redirect()->route('login');
-    }
+// Search Routes
+Route::get('/items-kas', [SearchController::class, 'cariNamaKas'])->name('kas.index');
+Route::get('/items-presensi', [SearchController::class, 'cariNamaPresensi'])->name('presensi.index');
+Route::get('/items-laporan', [SearchController::class, 'cariNamaLaporan'])->name('laporan.index');
 
-    return app(BerandaController::class)->index();
-})->name('beranda');
 
-Route::get('absensi', function () {
-    if (!session('siswa_logged_in')) {
-        return redirect()->route('login');
-    }
-    return app(AbsensiController::class)->index();
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes (Require Login)
+|--------------------------------------------------------------------------
+*/
+Route::middleware('siswaAuth')->group(function () {
+    Route::get('/presensi', [AbsensiController::class, 'index'])->name('presensi');
+    Route::get('/kas', [KasController::class, 'show_kas'])->name('kas');
+    Route::get('/laporan', [KasController::class, 'show_laporan'])->name('laporan');
+    Route::get('/beranda', [BerandaController::class, 'index'])->name('beranda');
+
+
+    // Logout
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
-
-// Logout
-Route::get('/logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');

@@ -7,6 +7,7 @@
     <title>Forum Kelas: Beranda</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="icon" type="image/png" href="icons/favicon.png">
 </head>
 
 <body class="bg-light">
@@ -16,17 +17,22 @@
             <h4 class="fw-bold">SOFTWARE ENGINEERING App</h4>
 
             <ul class="nav flex-column mt-4">
-                <li class="nav-item mb-2"><a class="nav-link text-dark" href="beranda"><img src="images/Home Page.png" width="20"> Beranda</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-dark" href="presensi"><img src="images/Bookmark.png" width="20"> Presensi</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-dark" href="kas"><img src="images/Banknotes.png" width="20"> Kas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-dark" href="laporan"><img src="images/Graph Report.png" width="20"> Laporan Kas</a></li>
-                <li class="nav-item mb-2"><a class="nav-link text-dark" onclick="hapus()"><img src="images/Emergency Exit.png" width="20"> Log out</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-dark" href="beranda"><img src="images/Home Page.png"
+                            width="20"> Beranda</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-dark" href="presensi"><img src="images/Bookmark.png"
+                            width="20"> Presensi</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-dark" href="kas"><img src="images/Banknotes.png"
+                            width="20"> Kas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-dark" href="laporan"><img
+                            src="images/Graph Report.png" width="20"> Laporan Kas</a></li>
+                <li class="nav-item mb-2"><a class="nav-link text-dark" onclick="hapus()"><img
+                            src="images/Emergency Exit.png" width="20"> Log out</a></li>
             </ul>
         </div>
 
         <div class="p-4 flex-grow-1">
 
-            <h2 class="text-center mb-2">Selamat Pagi</h2>
+            <h2 class="text-center mb-2" id="welcome"></h2>
 
             <p class="text-center">
                 Selamat datang di halaman beranda kelas kita.
@@ -36,28 +42,28 @@
             <div class="row mb-4">
                 <div class="col-md-6">
                     <div class="border rounded p-3 bg-white shadow-sm">
-                        <p>H = {{ $totalHadir }}</p>
-                        <p>A = {{ $totalAlfa }}</p>
-                        <p>S = {{ $totalSakit }}</p>
-                        <p>D = {{ $totalDispen }}</p>
-                        <p>I = {{ $totalIzin }}</p>
+                        <p class="fw-bold">Rekap Kehadiran:</p>
+                        <p>Hadir = {{ $totalHadir }}</p>
+                        <p>Alfa = {{ $totalAlfa }}</p>
+                        <p>Sakit = {{ $totalSakit }}</p>
+                        <p>Dispensasi = {{ $totalDispen }}</p>
+                        <p>Izin = {{ $totalIzin }}</p>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="border rounded p-3 bg-white shadow-sm">
                         <p class="fw-bold">Jadwal Hari Ini</p>
-                        @foreach ($jadwal as $item)
-                        <h4> {{ $item->hari }}</h4>
-                        <ul>
-                            <li> {{ $item->mapel1 }}</li>
-                            <li> {{ $item->mapel2 }}</li>
-                            <li> {{ $item->mapel3 }}</li>
-                            <li> {{ $item->mapel4 }}</li>
-                            <li> {{ $item->mapel5 }}</li>
-                            <li> {{ $item->mapel6 }}</li>
-                        </ul>
-                        @endforeach
+                        @if ($schedule->count() > 0)
+                            <h4> {{ $today }}</h4>
+                            @foreach ($schedule as $item)
+                                <ul>
+                                    <li> {{ $item->mapel }}</li>
+                                </ul>
+                            @endforeach
+                        @else
+                            <p class="text-danger">Tidak ada jadwal hari ini, silahkan jalan-jalan</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -103,8 +109,31 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-            crossorigin="anonymous"></script>
+            integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous">
+        </script>
+
+        <script>
+            function getGreeting() {
+                const now = new Date();
+                const hour = now.getHours();
+                let text = "";
+
+                if (hour >= 4 && hour < 10) {
+                    text = "Selamat pagi";
+                } else if (hour >= 10 && hour < 15) {
+                    text = "Selamat siang";
+                } else if (hour >= 15 && hour < 17) {
+                    text = "Selamat sore";
+                } else {
+                    text = "Selamat malam";
+                }
+
+                return text;
+            }
+
+            document.getElementById('welcome').textContent = getGreeting();
+        </script>
+
 </body>
 
 </html>
